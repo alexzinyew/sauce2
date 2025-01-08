@@ -113,18 +113,6 @@ local function register_builtin_types()
 	end
 end
 
-register_command({
-	name = "a",
-	args = { { type = "boolean" } },
-	callback = function(x, y)
-		print(y)
-		return success(y)
-	end,
-})
-
-register_builtin_types()
-query(nil, "a true")
-
 return {
 	register_command = register_command,
 	register_type = register_type,

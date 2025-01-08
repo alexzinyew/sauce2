@@ -1,22 +1,25 @@
+local types = require(script.Parent.types)
 local util = require(script.Parent.util)
 
 local fail, success = util.fail, util.success
 
-return {
+local TYPES: { types.ArgumentType } = {
 	{
 		name = "string",
 		deserializer = function(string)
-			return string
+			return success(string)
 		end,
 	},
 	{
 		name = "number",
 		deserializer = function(string)
 			local number = tonumber(string)
+
 			if not number then
 				return fail(`Could not convert {string} to number`)
 			end
-			return number
+
+			return success(number)
 		end,
 	},
 	{
@@ -30,3 +33,5 @@ return {
 		end,
 	},
 }
+
+return TYPES
