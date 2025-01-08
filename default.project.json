@@ -1,13 +1,6 @@
 {
+    "name": "sauce",
     "tree": {
-        "$className": "DataModel",
-        "ReplicatedStorage": {
-            "package": {
-                "$className": "Folder",
-                "src": {
-                    "$path": "src"
-                }
-            }
-        }
+        "$path": "src"
     }
 }
