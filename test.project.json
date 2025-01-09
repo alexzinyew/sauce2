@@ -1,4 +1,5 @@
 {
+    "name": "sauce",
     "tree": {
         "$className": "DataModel",
         "ReplicatedStorage": {

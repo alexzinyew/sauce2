@@ -3,14 +3,14 @@ local types = require(script.types)
 local util = require(script.util)
 local builtin_types = require(script.builtin_types)
 
-local registry: Registry = { commands = {}, types = {} }
-
 type Registry = types.Registry
 type Result<T> = types.Result<T>
 type ArgumentType = types.ArgumentType
 type Argument = types.Argument
 type CommandCallback<T...> = types.CommandCallback<T...>
 type Command<T...> = types.Command<T...>
+
+local registry: Registry = { commands = {}, types = {} }
 
 local fail, success = util.fail, util.success
 

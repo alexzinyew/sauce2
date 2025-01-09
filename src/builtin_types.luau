@@ -3,7 +3,7 @@ local util = require(script.Parent.util)
 
 local fail, success = util.fail, util.success
 
-local TYPES: { types.ArgumentType } = {
+return {
 	{
 		name = "string",
 		deserializer = function(string)
@@ -32,6 +32,4 @@ local TYPES: { types.ArgumentType } = {
 				else fail(`Expected "true" or "false", got {string}`)
 		end,
 	},
-}
-
-return TYPES
+} :: { types.ArgumentType }
