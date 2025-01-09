@@ -4,7 +4,7 @@ export type Result<T = nil> = { success: true, value: T? } | { success: false, r
 
 export type ArgumentType = {
 	name: string,
-	amount: number?,
+	parameters: number?,
 	suggestions: ((() -> { string }) | { string })?,
 	deserializer: (...string) -> Result<any>,
 }

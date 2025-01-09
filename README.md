@@ -16,80 +16,77 @@ There are no releases yet
 
 ## Registering
 
-### Argument Types
-Types are registered with the `register_type` function
-
-A type contains: <br>
-`name: string` The name of the type<br>
-`amount: number?` The amount of parameters the deserializer takes in, defaults to 1 <br>
-`deserializer: (...string) -> Result` The deserializer that takes in the parameters <br>
-`suggestions: ( {string} | () -> {string} )?` An optional array of autocompletions<br>
-
 #### Type Registration Example
 
 ```luau
-sauce.register_type {
-    name = "boolean",
-    deserializer = function(text)
-        if text == "true" then
-            return sauce.success(true)
-        elseif text == "false" then
-            return sauce.success(false)
-        end
-        
-        return sauce.fail("Expected true or false")
-    end,
-}
-```
+sauce.register_type({
+	name = "player",
+	parameters = 1,
+	suggestions = function()
+		local names = {}
 
-### Commands
-Commands are registered with the `register_command` function
-
-A command contains: <br>
-`name: string` The name of the command <br>
-`description: string?` The optional description of the command <br>
-`callback: (Player?, ...) -> Result` The function that runs when the command is called <br>
-`args: {Argument}` The arguments of the command <br>
-`checks: { (Player?) -> Result }?` The checks that must all return successfully before the callback runs
-
-#### Command Registration Example 
-
-```luau
-sauce.register_command {
-	name = "add",
-	args = {
-		{
-			type = "number",
-			amount = "variadic",
-		},
-	},
-	callback = function(player, ...: number)
-		local sum = 0
-
-		for _, number in { ... } do
-			sum += number
+		for _, player in game:GetService("Players"):GetPlayers() do
+			table.insert(names, player.Name)
 		end
 
-		print(sum)
+		return names
+	end,
+
+	deserializer = function(name)
+		local player = game:GetService("Players"):FindFirstChild(name)
+
+		return sauce.result(player ~= nil, player)
+	end,
+})
+```
+
+### Command Registration Example
+
+```luau
+sauce.register_command({
+	name = "kill",
+	description = "kills provided players from username",
+
+	checks = {
+		-- Example check for private server owner
+		function(caller: Player?)
+			return sauce.result(caller ~= nil and caller.UserId == game.PrivateServerOwnerId)
+		end,
+	},
+
+	args = {
+		{
+			name = "names",
+			description = "The players to kill",
+
+			type = "player",
+			amount = 1, -- Can also be "variadic"
+
+			optional = false,
+		},
+	},
+
+	callback = function(caller, player: Player)
+		if player.Character then
+			local humanoid = player.Character:FindFirstChild("Humanoid") :: Humanoid?
+			if humanoid then
+				humanoid.Health = 0
+			end
+		end
 
 		return sauce.success()
 	end,
-}
+})
 ```
 
-## Arguments
+## Builtin Types
 
-Arguments are not registered, but are instead contained inside a command and use argument types. An example of an argument can be seen in the code sample above
+`string`, `boolean`, and `number` types are automatically registered when the `register_builtin_types` function is called
 
-An argument contains: <br>
-`name: string?` The name of the argument <br>
-`description: string?` The description of the argument <br>
-`type: ArgumentType | string` The name of a registered type OR the actual table <br>
-`amount: (number | "variadic")?` How many times the parameters will be given to the type's deserializer. (If "variadic", then it can only be used as the last argument) <br>
-`optional: boolean?` Whether or not the argument is optional or not (can only be used as the last argument)
+## Querying
 
-## Amounts
+Queries are run through the `query` function, example:
 
-Arguments and Argument Types both contain their own `amount` field.
-
-The type's amount field determines how many variables are given to the deserializer, while the argument's amount field determines how many times the type's deserializer will run and be given to the callback.
+```luau
+sauce.query(localplayer, "add 4 6 9")
+```

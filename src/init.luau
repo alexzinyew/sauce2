@@ -12,7 +12,7 @@ type Command<T...> = typedef.Command<T...>
 
 local registry: Registry = { commands = {}, types = {} }
 
-local fail, success = util.fail, util.success
+local fail, success, result = util.fail, util.success, util.result
 
 local function register_command<T...>(command: Command<T...>): Command<T...>
 	registry.commands[command.name] = command
@@ -70,10 +70,10 @@ local function query(player: Player?, query: string): Result<nil>
 			assert(type, `{full_name} has an unregistered type "{arg.type}"`)
 
 			deserializer = type.deserializer
-			type_amount = math.abs(type.amount or 1)
+			type_amount = math.abs(type.parameters or 1)
 		else
 			deserializer = arg.type.deserializer
-			type_amount = math.abs(arg.type.amount or 1)
+			type_amount = math.abs(arg.type.parameters or 1)
 		end
 
 		if arg.amount then
@@ -137,6 +137,7 @@ return {
 
 	success = success,
 	fail = fail,
+	result = result,
 
 	register_builtin_types = register_builtin_types,
 }
