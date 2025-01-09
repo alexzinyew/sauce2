@@ -1,10 +1,10 @@
-local types = require(script.Parent.types)
+local typedef = require(script.Parent.typedef)
 
-local function success<T>(value: T?): types.Result<T>
+local function success<T>(value: T?): typedef.Result<T>
 	return { success = true, value = value }
 end
 
-local function fail<T>(reason: string?): types.Result<T>
+local function fail<T>(reason: string?): typedef.Result<T>
 	return { success = false, reason = reason }
 end
 

@@ -1,4 +1,4 @@
-local types = require(script.Parent.types)
+local typedef = require(script.Parent.typedef)
 local util = require(script.Parent.util)
 
 local fail, success = util.fail, util.success
@@ -32,4 +32,4 @@ return {
 				else fail(`Expected "true" or "false", got {string}`)
 		end,
 	},
-} :: { types.ArgumentType }
+} :: { typedef.ArgumentType }
